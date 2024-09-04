@@ -19,7 +19,6 @@ io.on('connection', (socket) => {
    }) 
  }) 
 
-app.listen(port, () => { //[!code --]
 http.listen(port, () => { 
   console.log(`App listening on port ${port}`)
 })
