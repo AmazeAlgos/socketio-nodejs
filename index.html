@@ -1,35 +1,31 @@
 <html>
   <body>
     <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" placeholder="Type a message..." />
-      <button>Send</button>
-    </form>
 
-    <!-- Load Socket.IO script -->
+    <!-- Load Socket.IO client script -->
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
+      // Connect to the server via WebSocket
       var socket = io();
 
-      var form = document.getElementById('form');
-      var input = document.getElementById('input');
+      // Get the list where messages will be displayed
       var messages = document.getElementById('messages');
-
-      // Handle form submission
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();  // Prevent page reload
-        if (input.value) {
-          socket.emit('message', input.value);  // Send message to server
-          input.value = '';  // Clear input
-        }
-      });
 
       // Listen for 'message' events from the server
       socket.on('message', function (msg) {
         var item = document.createElement('li');
-        item.textContent = msg;  // Set message content
-        messages.appendChild(item);  // Add message to list
+
+        // Try to parse the message if it's in JSON format
+        try {
+          var parsedMsg = JSON.parse(msg);
+          item.textContent = parsedMsg.content || msg;  // Display content field if available
+        } catch (e) {
+          item.textContent = msg;  // If not JSON, show raw message
+        }
+
+        // Append the message to the list
+        messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);  // Scroll to the latest message
       });
     </script>
