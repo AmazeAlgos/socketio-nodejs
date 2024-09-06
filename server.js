@@ -52,7 +52,7 @@ function sendTimeUpdates() {
         const formattedTime = currentTime.toISOString().replace(/\.\d+Z$/, `.${truncatedMilliseconds}Z`);
         const broadcastMessage = `Current UTC time: ${formattedTime}`;
 
-        // Emit time updates to subscribed clients
+        // Emit time updates to all clients
         manager.subscriptions.forEach(socket => {
           socket.emit('message', broadcastMessage);
         });
@@ -60,8 +60,9 @@ function sendTimeUpdates() {
         lastSentTime = currentTime;
       }
     }
-  }, 1); // Check every 1 ms
+  }, 1);  // Check every 1 ms
 }
+
 
 io.on('connection', (socket) => {
   console.log('Client connected');
